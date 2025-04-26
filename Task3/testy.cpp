@@ -13,7 +13,7 @@ protected:
 };
 
 TEST_F(ApplicationTest, FindsMatchingAsks) {
-  ASSERT_EQ(apk.ask("Kiedy jest nowy rok"),
+  ASSERT_EQ(apk.ask("Kiedy jest nowy rok fail"),
             (std::vector<std::string>{"Kiedy jest nowy rok w Chinach?",
                                       "Kiedy jest nowy rok w Tajlandii?"}));
 }
