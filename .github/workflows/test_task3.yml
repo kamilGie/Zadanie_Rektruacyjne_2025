@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'Task3/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+      - 'Task3/**'  # Uruchomi workflow tylko dla zmian w folderze Task3
   pull_request:
     branches: [ main ]
     paths:
-      - 'Task3/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+      - 'Task3/**'  # Uruchomi workflow tylko dla zmian w folderze Task3
   workflow_dispatch:  # Manualne uruchomienie workflow
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
       run: mkdir -p build/Task3
 
     - name: Run CMake for Task3
-      run: cmake -S Task3 -B build/task3
+      run: cmake -S Task3 -B build/Task3
 
     - name: Build the project for Task3
       run: cmake --build build/Task3
