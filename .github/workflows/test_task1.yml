@@ -28,7 +28,7 @@ jobs:
       run: cmake -S Task1 -B build/Task1
 
     - name: Build the project for Task1
-      run: cmake --build build/Task1
+      run: cmake --build build/task1
 
     - name: Run tests for Task1
-      run: ./build/Task1/Tests
+      run: ./build/Task1/tests-ut
