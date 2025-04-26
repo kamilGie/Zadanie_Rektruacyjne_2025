@@ -1,2 +1,0 @@
-Task3/CMakeFiles/task3.dir/main.cpp.o: \
-  /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/Task3/main.cpp
