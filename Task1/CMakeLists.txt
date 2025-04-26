@@ -16,7 +16,7 @@ else()
 endif()
 
 # Aplikacja
-set(sources src/Application.cpp)
+set(sources src/Application.cpp src/SearchBar.cpp)
 add_executable(${PROJECT_NAME} main.cpp ${sources})
 
 # Plik compile_commands.json dla Neovim LSP

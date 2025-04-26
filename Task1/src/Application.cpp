@@ -1,22 +1,27 @@
 #include "./Application.h"
-#include <vector>
+#include <iostream>
 
-Application::Application(std::filesystem::path file) : file(std::move(file)) {}
+Application::Application(std::filesystem::path file) {
+  searchBar = SearchBar(file);
+}
 
-std::vector<std::string>
-Application::ask(const std::string_view &question) const {
-  std::vector<std::string> res;
-  for (const std::string &ask : asks) {
-    if (ask.find(question) != std::string::npos) {
-      res.emplace_back(ask);
+void Application::processCommand(const std::string &line) {
+  if (line.starts_with("add: ")) {
+    searchBar.add(line.substr(5));
+  } else if (line.starts_with("ask: ")) {
+    for (const auto &res : searchBar.ask(line.substr(5))) {
+      std::cout << "result: " << res << std::endl;
     }
+  } else {
+    std::cout << "Nieznana komenda. Dostępne komendy:\n";
+    std::cout << "  add: <tekst> - dodaje wpis\n";
+    std::cout << "  ask: <pytanie> - zadaje pytanie\n";
+    std::cout << "  (pusta linia) - zakończenie programu\n";
   }
-  return res;
 }
 
-void Application::add(std::string_view question) {
-  asks.emplace_back(question);
-}
+const SearchBar &Application::getSearchBar() const { return searchBar; }
 
-const std::filesystem::path &Application::getFile() const { return file; }
-const std::vector<std::string> &Application::getAsks() const { return asks; }
+void Application::setSearchBar(const SearchBar &newSearchBar) {
+  searchBar = newSearchBar;
+}
