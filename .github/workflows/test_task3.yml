@@ -1,0 +1,34 @@
+name: Build and Test Task3
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Task3/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Task3/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+  workflow_dispatch:  # Manualne uruchomienie workflow
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake g++
+
+    - name: Create build directory for Task3
+      run: mkdir -p build/Task3
+
+    - name: Run CMake for Task3
+      run: cmake -S Task3 -B build/task3
+
+    - name: Build the project for Task3
+      run: cmake --build build/Task3
+
+    - name: Run tests for Task3
+      run: ./build/Task3/Tests

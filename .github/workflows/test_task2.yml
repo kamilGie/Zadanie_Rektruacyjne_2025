@@ -1,0 +1,34 @@
+name: Build and Test Task2
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+  workflow_dispatch:  # Manualne uruchomienie workflow
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake g++
+
+    - name: Create build directory for Task2
+      run: mkdir -p build/Task2
+
+    - name: Run CMake for Task2
+      run: cmake -S Task2 -B build/task1
+
+    - name: Build the project for Task2
+      run: cmake --build build/Task2
+
+    - name: Run tests for Task2
+      run: ./build/Task2/Task2-ut
