@@ -50,7 +50,7 @@ jobs:
       - name: Run tests for Task3
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            Task3\\build\\Task3-ut.exe
+            ./Task3/build/Task3-ut.exe
           else
             ./Task3/build/Task3-ut
           fi

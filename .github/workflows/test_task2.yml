@@ -50,7 +50,7 @@ jobs:
       - name: Run tests for Task2
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            Task2\\build\\Task2-ut.exe
+            ./Task2/build/Task2-ut.exe
           else
             ./Task2/build/Task2-ut
           fi
