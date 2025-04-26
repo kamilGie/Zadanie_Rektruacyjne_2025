@@ -1,5 +1,0 @@
-if(EXISTS "/Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/build/Task1-ut[1]_tests.cmake")
-  include("/Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/build/Task1-ut[1]_tests.cmake")
-else()
-  add_test(Task1-ut_NOT_BUILT Task1-ut_NOT_BUILT)
-endif()
