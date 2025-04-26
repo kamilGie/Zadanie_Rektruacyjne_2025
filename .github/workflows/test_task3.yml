@@ -22,13 +22,15 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y cmake g++
 
     - name: Create build directory for Task3
-      run: mkdir -p build/Task3
+      run: mkdir -p Task3/build/
 
     - name: Run CMake for Task3
-      run: cmake -S Task3 -B build/Task3
+      run: cmake -S Task3 -B Task3/build/
 
     - name: Build the project for Task3
-      run: cmake --build build/task3
+      run: cmake --build Task3/build/
 
     - name: Run tests for Task3
-      run: ./build/Task3/task3-ut
+      run: ./Task3/build/Task3-ut
+
+

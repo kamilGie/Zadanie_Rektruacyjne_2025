@@ -31,4 +31,4 @@ jobs:
       run: cmake --build Task1/build/
 
     - name: Run tests for Task1
-      run: ./Task1/build/tests-ut
+      run: ./Task1/build/Task1-ut

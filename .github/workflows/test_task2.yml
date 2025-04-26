@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze Task2
   pull_request:
     branches: [ main ]
     paths:
-      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze task3
+      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze Task2
   workflow_dispatch:  # Manualne uruchomienie workflow
 
 jobs:
@@ -22,13 +22,14 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y cmake g++
 
     - name: Create build directory for Task2
-      run: mkdir -p build/Task2
+      run: mkdir -p Task2/build/
 
     - name: Run CMake for Task2
-      run: cmake -S Task2 -B build/task1
+      run: cmake -S Task2 -B Task2/build/
 
     - name: Build the project for Task2
-      run: cmake --build build/task2
+      run: cmake --build Task2/build/
 
     - name: Run tests for Task2
-      run: ./build/Task2/task2-ut
+      run: ./Task2/build/Task2-ut
+
