@@ -57,33 +57,23 @@ RM = /opt/homebrew/Cellar/cmake/3.29.3/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/task2
+CMAKE_SOURCE_DIR = /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/Task2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/task2/build
+CMAKE_BINARY_DIR = /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/Task2/build
 
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target package
-package: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
-	/opt/homebrew/Cellar/cmake/3.29.3/bin/cpack --config ./CPackConfig.cmake
-.PHONY : package
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/opt/homebrew/Cellar/cmake/3.29.3/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
 
-# Special rule for the target package
-package/fast: package
-.PHONY : package/fast
-
-# Special rule for the target package_source
-package_source:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
-	/opt/homebrew/Cellar/cmake/3.29.3/bin/cpack --config ./CPackSourceConfig.cmake /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/task2/build/CPackSourceConfig.cmake
-.PHONY : package_source
-
-# Special rule for the target package_source
-package_source/fast: package_source
-.PHONY : package_source/fast
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -152,9 +142,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/task2/build/CMakeFiles /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/task2/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/Task2/build/CMakeFiles /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/Task2/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/task2/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/koxu2115/Desktop/kody/zadania_rekrutacyjne/novomotic/Task2/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -182,76 +172,89 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named triangle
+# Target rules for targets named Task2
 
 # Build rule for target.
-triangle: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 triangle
-.PHONY : triangle
+Task2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Task2
+.PHONY : Task2
 
 # fast build rule for target.
-triangle/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/triangle.dir/build.make CMakeFiles/triangle.dir/build
-.PHONY : triangle/fast
+Task2/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2.dir/build.make CMakeFiles/Task2.dir/build
+.PHONY : Task2/fast
 
 #=============================================================================
-# Target rules for targets named uninstall
+# Target rules for targets named Task2-ut
 
 # Build rule for target.
-uninstall: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 uninstall
-.PHONY : uninstall
+Task2-ut: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Task2-ut
+.PHONY : Task2-ut
 
 # fast build rule for target.
-uninstall/fast:
-	$(MAKE) $(MAKESILENT) -f _deps/raylib-build/CMakeFiles/uninstall.dir/build.make _deps/raylib-build/CMakeFiles/uninstall.dir/build
-.PHONY : uninstall/fast
+Task2-ut/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2-ut.dir/build.make CMakeFiles/Task2-ut.dir/build
+.PHONY : Task2-ut/fast
 
 #=============================================================================
-# Target rules for targets named raylib
+# Target rules for targets named gmock
 
 # Build rule for target.
-raylib: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib
-.PHONY : raylib
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
 
 # fast build rule for target.
-raylib/fast:
-	$(MAKE) $(MAKESILENT) -f _deps/raylib-build/raylib/CMakeFiles/raylib.dir/build.make _deps/raylib-build/raylib/CMakeFiles/raylib.dir/build
-.PHONY : raylib/fast
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
 
 #=============================================================================
-# Target rules for targets named glfw
+# Target rules for targets named gmock_main
 
 # Build rule for target.
-glfw: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 glfw
-.PHONY : glfw
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
 
 # fast build rule for target.
-glfw/fast:
-	$(MAKE) $(MAKESILENT) -f _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/build.make _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/build
-.PHONY : glfw/fast
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
 
 #=============================================================================
-# Target rules for targets named update_mappings
+# Target rules for targets named gtest
 
 # Build rule for target.
-update_mappings: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 update_mappings
-.PHONY : update_mappings
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
 
 # fast build rule for target.
-update_mappings/fast:
-	$(MAKE) $(MAKESILENT) -f _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build.make _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build
-.PHONY : update_mappings/fast
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
 
 main.o: main.cpp.o
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/triangle.dir/build.make CMakeFiles/triangle.dir/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2.dir/build.make CMakeFiles/Task2.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -259,7 +262,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/triangle.dir/build.make CMakeFiles/triangle.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2.dir/build.make CMakeFiles/Task2.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -267,8 +270,59 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/triangle.dir/build.make CMakeFiles/triangle.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2.dir/build.make CMakeFiles/Task2.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+src/Application.o: src/Application.cpp.o
+.PHONY : src/Application.o
+
+# target to build an object file
+src/Application.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2.dir/build.make CMakeFiles/Task2.dir/src/Application.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2-ut.dir/build.make CMakeFiles/Task2-ut.dir/src/Application.cpp.o
+.PHONY : src/Application.cpp.o
+
+src/Application.i: src/Application.cpp.i
+.PHONY : src/Application.i
+
+# target to preprocess a source file
+src/Application.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2.dir/build.make CMakeFiles/Task2.dir/src/Application.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2-ut.dir/build.make CMakeFiles/Task2-ut.dir/src/Application.cpp.i
+.PHONY : src/Application.cpp.i
+
+src/Application.s: src/Application.cpp.s
+.PHONY : src/Application.s
+
+# target to generate assembly for a file
+src/Application.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2.dir/build.make CMakeFiles/Task2.dir/src/Application.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2-ut.dir/build.make CMakeFiles/Task2-ut.dir/src/Application.cpp.s
+.PHONY : src/Application.cpp.s
+
+testy.o: testy.cpp.o
+.PHONY : testy.o
+
+# target to build an object file
+testy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2-ut.dir/build.make CMakeFiles/Task2-ut.dir/testy.cpp.o
+.PHONY : testy.cpp.o
+
+testy.i: testy.cpp.i
+.PHONY : testy.i
+
+# target to preprocess a source file
+testy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2-ut.dir/build.make CMakeFiles/Task2-ut.dir/testy.cpp.i
+.PHONY : testy.cpp.i
+
+testy.s: testy.cpp.s
+.PHONY : testy.s
+
+# target to generate assembly for a file
+testy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task2-ut.dir/build.make CMakeFiles/Task2-ut.dir/testy.cpp.s
+.PHONY : testy.cpp.s
 
 # Help Target
 help:
@@ -281,17 +335,23 @@ help:
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
-	@echo "... package"
-	@echo "... package_source"
 	@echo "... rebuild_cache"
-	@echo "... uninstall"
-	@echo "... update_mappings"
-	@echo "... glfw"
-	@echo "... raylib"
-	@echo "... triangle"
+	@echo "... test"
+	@echo "... Task2"
+	@echo "... Task2-ut"
+	@echo "... gmock"
+	@echo "... gmock_main"
+	@echo "... gtest"
+	@echo "... gtest_main"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/Application.o"
+	@echo "... src/Application.i"
+	@echo "... src/Application.s"
+	@echo "... testy.o"
+	@echo "... testy.i"
+	@echo "... testy.s"
 .PHONY : help
 
 

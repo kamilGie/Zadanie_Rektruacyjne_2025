@@ -1,16 +1,32 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(task3)
+project(Task2)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -std=c++20")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall  -pedantic -std=c++20")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 20)
-file(GLOB sources "main.cpp")
+set(sources src/Application.cpp)
+
+add_executable(${PROJECT_NAME} main.cpp ${sources})
+
+# for neovim lsp
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(${PROJECT_NAME} main.cpp)
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
 
-if(APPLE)
-	target_link_libraries(${PROJECT_NAME} "-framework IOkit")
-	target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
-	target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
-endif()
+set(gtest_force_shared_crt
+    ON
+    CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+add_executable(${PROJECT_NAME}-ut testy.cpp ${sources})
+target_link_libraries(${PROJECT_NAME}-ut GTest::gtest_main)
+
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME}-ut)
