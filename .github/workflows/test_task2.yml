@@ -30,6 +30,7 @@ jobs:
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             brew install cmake
           fi
+        shell: bash
 
       - name: Create build directory for Task2
         run: |
@@ -38,6 +39,7 @@ jobs:
           else
             mkdir -p Task2/build
           fi
+        shell: bash
 
       - name: Run CMake for Task2
         run: cmake -S Task2 -B Task2/build/
@@ -52,5 +54,6 @@ jobs:
           else
             ./Task2/build/Task2-ut
           fi
+        shell: bash
 
 
