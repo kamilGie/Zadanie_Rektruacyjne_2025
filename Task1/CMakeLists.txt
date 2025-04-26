@@ -15,9 +15,6 @@ else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++20")
 endif()
 
-# Output plików wykonywalnych bez Debug/Release katalogów
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
 # Aplikacja
 set(sources src/Application.cpp)
 add_executable(${PROJECT_NAME} main.cpp ${sources})
