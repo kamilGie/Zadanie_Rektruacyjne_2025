@@ -47,13 +47,8 @@ jobs:
 
       - name: Build the project for Task1
         run: cmake --build Task1/build/
-
+        
       - name: Run tests for Task1
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./Task1/build/Task1-ut.exe 
-          else
-            ./Task1/build/Task1-ut
-          fi
+        run: ./Task1/build/Task1-ut
         shell: bash
 

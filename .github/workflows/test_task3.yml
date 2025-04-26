@@ -48,13 +48,7 @@ jobs:
         run: cmake --build Task3/build/
 
       - name: Run tests for Task3
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./Task3/build/Task3-ut.exe
-          else
-            ./Task3/build/Task3-ut
-          fi
+        run: ./Task3/build/Task3-ut
         shell: bash
-
 
 
