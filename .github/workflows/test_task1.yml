@@ -37,12 +37,16 @@ jobs:
         shell: bash
 
       - name: Run CMake for Task1
-        run: cmake -S Task1 -B Task1/build/ -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S Task1 -B Task1/build/
 
       - name: Build the project for Task1
-        run: cmake --build Task1/build/ --config Release
+        run: cmake --build Task1/build/
         
       - name: Run tests for Task1
-        run: ./Task1/build/Task1-ut
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            ./Task1/build/Debug/Task1-ut
+          else
+            ./Task1/build/Task1-ut
+          fi
         shell: bash
-
