@@ -37,10 +37,10 @@ jobs:
         shell: bash
 
       - name: Run CMake for Task1
-        run: cmake -S Task1 -B Task1/build/
+        run: cmake -S Task1 -B Task1/build/ -DCMAKE_BUILD_TYPE=Release
 
       - name: Build the project for Task1
-        run: cmake --build Task1/build/
+        run: cmake --build Task1/build/ --config Release
         
       - name: Run tests for Task1
         run: ./Task1/build/Task1-ut
