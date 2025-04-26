@@ -26,3 +26,4 @@ TEST(ApplicationEmptyTest, ReturnsEmptyWhenNoAsksAdded) {
   Application apk;
   ASSERT_EQ(apk.ask("Kiedy jest nowy rok"), std::vector<std::string>{});
 }
+
