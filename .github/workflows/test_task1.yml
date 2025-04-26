@@ -32,14 +32,8 @@ jobs:
           fi
         shell: bash
 
-
       - name: Create build directory for Task1
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            mkdir Task1\\build
-          else
-            mkdir -p Task1/build
-          fi
+        run: mkdir -p Task1/build
         shell: bash
 
       - name: Run CMake for Task1
