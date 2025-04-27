@@ -1,31 +1,24 @@
 #include "src/Application.h"
-#include <iostream>
+#include "src/Visualisation.h"
 
-void processCommand(const std::string &line, Application &app) {
-  if (line.starts_with("add: ")) {
-    app.add(line.substr(5));
-  } else if (line.starts_with("ask: ")) {
-    for (const auto &res : app.ask(line.substr(5))) {
-      std::cout << "result: " << res << std::endl;
-    }
-  } else {
-    std::cout << "Nieznana komenda. Dostępne komendy:\n";
-    std::cout << "  add: <tekst> - dodaje wpis\n";
-    std::cout << "  ask: <pytanie> - zadaje pytanie\n";
-    std::cout << "  (pusta linia) - zakończenie programu\n";
-  }
-}
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 int main() {
-  Application SearchBar;
+  // tworze 2 trojkaty
+  triangle t1{{{{200, 150}, {100, 350}, {300, 350}}}};
+  triangle t2{{{{400, 150}, {301, 351}, {500, 350}}}};
 
-  std::string line;
+  Visualisation vis(WINDOW_WIDTH, WINDOW_HEIGHT);
+  vis.addTriangle(t1);
+  vis.addTriangle(t2);
 
-  while (true) {
-    std::cout << "> ";
-    std::getline(std::cin, line);
-    if (line.empty())
-      break;
-    processCommand(line, SearchBar);
+  while (!vis.shouldExit()) {
+    vis.handleInput();
+
+    // Jesli trojkaty koliduja informuje
+    vis.redLight = isColliding(t1, t2);
+
+    vis.draw();
   }
 }
