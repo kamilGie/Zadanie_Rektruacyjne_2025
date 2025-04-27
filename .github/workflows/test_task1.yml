@@ -48,7 +48,7 @@ jobs:
       - name: Build with Conan
         run: |
           cd Task1
-          conan build . -s build_type=${{ matrix.build_type }}
+          conan build . --build=missing -s build_type=${{ matrix.build_type }}
 
       - name: Run tests
         run: |
