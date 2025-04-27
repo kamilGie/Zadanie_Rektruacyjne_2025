@@ -1,52 +1,56 @@
-name: Build and Test Task1
+name: Build and Test Task1 with Conan
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'Task1/**'  # Uruchomi workflow tylko dla zmian w folderze Task1
+      - 'Task1/**'
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'Task1/**'  # Uruchomi workflow tylko dla zmian w folderze Task1
-  workflow_dispatch:  # Manualne uruchomienie workflow
+      - 'Task1/**'
+  workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]  # Określenie systemów operacyjnych
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        build_type: [Release, Debug]
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Conan
+        run: pip install conan
+
+      - name: Install build tools
         run: |
           if [[ "$RUNNER_OS" == "Linux" ]]; then
-            sudo apt-get update && sudo apt-get install -y cmake g++
+            sudo apt-get update && sudo apt-get install -y build-essential cmake
           elif [[ "$RUNNER_OS" == "Windows" ]]; then
-            choco install cmake
+            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             brew install cmake
           fi
-        shell: bash
 
-      - name: Create build directory for Task1
-        run: mkdir -p Task1/build
-        shell: bash
-
-      - name: Run CMake for Task1
-        run: cmake -S Task1 -B Task1/build/
-
-      - name: Build the project for Task1
-        run: cmake --build Task1/build/
-        
-      - name: Run tests for Task1
+      - name: Configure Conan
         run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./Task1/build/Debug/Task1-ut
-          else
-            ./Task1/build/Task1-ut
-          fi
+          conan profile detect --force
+
+      - name: Build with Conan
+        run: |
+          cd Task1
+          conan build . -s build_type=${{ matrix.build_type }}
+
+      - name: Run tests
+        run: |
+          ./build/${{ matrix.build_type }}/Task1-ut
         shell: bash

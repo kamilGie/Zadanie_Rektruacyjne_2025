@@ -1,31 +1,35 @@
-#include "src/Application.h"
+#include <concepts>
 #include <iostream>
 
-void processCommand(const std::string &line, Application &app) {
-  if (line.starts_with("add: ")) {
-    app.add(line.substr(5));
-  } else if (line.starts_with("ask: ")) {
-    for (const auto &res : app.ask(line.substr(5))) {
-      std::cout << "result: " << res << std::endl;
-    }
-  } else {
-    std::cout << "Nieznana komenda. Dostępne komendy:\n";
-    std::cout << "  add: <tekst> - dodaje wpis\n";
-    std::cout << "  ask: <pytanie> - zadaje pytanie\n";
-    std::cout << "  (pusta linia) - zakończenie programu\n";
+struct MyType {
+  int value;
+  static MyType identity() { return MyType{0}; }
+};
+
+MyType f(MyType n, MyType mt) { return MyType{mt.value + n.value}; }
+
+template <class T, class Op>
+concept IsSupported = requires(T first, T second, Op operation) {
+  { operation(first, second) } -> std::convertible_to<T>;
+  { T::identity() } -> std::convertible_to<T>;
+};
+
+template <class BinaryOp, class ValueType>
+  requires IsSupported<ValueType, BinaryOp>
+ValueType calculate(int n, ValueType value, const BinaryOp &f) {
+  ValueType res = ValueType::identity();
+
+  for (int i = 0; i < n; i++) {
+    res = f(value, res);
   }
+
+  return res;
 }
 
 int main() {
-  Application SearchBar;
-
-  std::string line;
-
-  while (true) {
-    std::cout << "> ";
-    std::getline(std::cin, line);
-    if (line.empty())
-      break;
-    processCommand(line, SearchBar);
-  }
+  MyType x{7};
+  auto result1 = calculate(3, x, f);
+  auto result2 = f(f(x, x), x);
+  std::cout << result1.value << "  " << result2.value << std::endl;
+  return 0;
 }

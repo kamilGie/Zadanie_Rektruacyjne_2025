@@ -21,11 +21,7 @@ void Visualisation::drawTriangles() const {
 
 void Visualisation::draw() const {
   BeginDrawing();
-  if (redLight) {
-    ClearBackground(RED);
-  } else {
-    ClearBackground(RAYWHITE);
-  }
+  ClearBackground(redLight ? RED : RAYWHITE);
   drawTriangles();
   EndDrawing();
 }
