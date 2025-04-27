@@ -1,29 +1,11 @@
-#include "src/Application.h"
+#include "src/Templates.hpp"
+#include "src/Types.h"
 #include <gtest/gtest.h>
-#include <vector>
-
-class ApplicationTest : public ::testing::Test {
-protected:
-  Application apk;
-
-  void SetUp() override {
-    apk.add("Kiedy jest nowy rok w Chinach?");
-    apk.add("Kiedy jest nowy rok w Tajlandii?");
-  }
-};
-
-TEST_F(ApplicationTest, FindsMatchingAsks) {
-  ASSERT_EQ(apk.ask("Kiedy jest nowy rok"),
-            (std::vector<std::string>{"Kiedy jest nowy rok w Chinach?",
-                                      "Kiedy jest nowy rok w Tajlandii?"}));
-}
-
-TEST_F(ApplicationTest, ReturnsEmptyWhenNoMatchFound) {
-  ASSERT_EQ(apk.ask("Ile ma lat"), std::vector<std::string>{});
-}
 
 TEST(ApplicationEmptyTest, ReturnsEmptyWhenNoAsksAdded) {
-  Application apk;
-  ASSERT_EQ(apk.ask("Kiedy jest nowy rok"), std::vector<std::string>{});
+  intType (*f)(intType, intType);
+  intType x{7};
+  auto result1 = calculate(3, x, f);
+  auto result2 = f(f(x, x), x);
+  ASSERT_EQ(result2.value, result1.value);
 }
-

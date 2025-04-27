@@ -1,56 +1,58 @@
-name: Build and Test Task2
+name: Build and Test Task2 with Conan
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze Task2
+      - 'Task2/**'
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'Task2/**'  # Uruchomi workflow tylko dla zmian w folderze Task2
-  workflow_dispatch:  # Manualne uruchomienie workflow
+      - 'Task2/**'
+  workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]  # Określenie systemów operacyjnych
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        build_type: [Release, Debug]
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Conan
+        run: pip install conan
+
+      - name: Install build tools
         run: |
           if [[ "$RUNNER_OS" == "Linux" ]]; then
-            sudo apt-get update && sudo apt-get install -y \
-                  cmake g++ \
-                  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
-                  libgl1-mesa-dev libglu1-mesa-dev  # OpenGL libraries
+            sudo apt-get update && sudo apt-get install -y build-essential cmake
           elif [[ "$RUNNER_OS" == "Windows" ]]; then
-            choco install cmake
+            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             brew install cmake
           fi
         shell: bash
 
-      - name: Create build directory for Task2
-        run: mkdir -p Task2/build
-        shell: bash
-
-      - name: Run CMake for Task2
-        run: cmake -S Task2 -B Task2/build/
-
-      - name: Build the project for Task2
-        run: cmake --build Task2/build/
-
-      - name: Run tests for Task2
+      - name: Configure Conan
         run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./Task2/build/Debug/Task2-ut
-          else
-            ./Task2/build/Task2-ut
-          fi
+          conan profile detect --force
+
+      - name: Build with Conan
+        run: |
+          cd Task2
+          conan build . --build=missing -s build_type=${{ matrix.build_type }}
+
+      - name: Run tests
+        run: |
+          ./Task2/build/${{ matrix.build_type }}/Task2-ut
         shell: bash
 

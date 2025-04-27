@@ -1,64 +1,26 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.24)
+project(Task2 LANGUAGES CXX)
 
-project(Task2)
-
-# Ustaw standard C++
+# Globalne ustawienia
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Ustawienia flagi kompilatora
-if(MSVC)
-	# dla Visual Studio
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++20")
-else()
-	# dla gcc/clang
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++20")
-endif()
-
-# Plik compile_commands.json dla LSP
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Aplikacja
-set(sources src/Visualisation.cpp src/Application.cpp)
-add_executable(${PROJECT_NAME} main.cpp ${sources})
+set(SOURCES src/Application.cpp src/Visualisation.cpp)
 
-# GoogleTest
-include(FetchContent)
-FetchContent_Declare(
-		googletest
-		URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-set(gtest_force_shared_crt
-				ON
-				CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# Wyszukiwanie zależności
+find_package(Raylib REQUIRED)
+find_package(GTest REQUIRED)
 
-# raylib
-set(RAYLIB_VERSION 5.5)
-FetchContent_Declare(
-		raylib
-		URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
-)
+# Główny plik wykonywalny
+add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
+target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
-set(BUILD_EXAMPLES
-				OFF
-				CACHE INTERNAL "")
-FetchContent_MakeAvailable(raylib)
-target_link_libraries(${PROJECT_NAME} raylib)
-
-if(APPLE)
-	target_link_libraries(${PROJECT_NAME} "-framework IOkit")
-	target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
-	target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
-endif()
-
-# Enable testing
+# Testy
 enable_testing()
+add_executable(${PROJECT_NAME}-ut testy.cpp ${SOURCES})
+target_link_libraries(${PROJECT_NAME}-ut PRIVATE GTest::GTest GTest::gtest_main raylib)
 
-# Testy jednostkowe
-add_executable(${PROJECT_NAME}-ut testy.cpp ${sources})
-target_link_libraries(${PROJECT_NAME}-ut GTest::gtest_main raylib)
-
-# Autoodkrywanie testów
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}-ut)
