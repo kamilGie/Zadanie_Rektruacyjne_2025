@@ -52,5 +52,5 @@ jobs:
 
       - name: Run tests
         run: |
-          ./build/${{ matrix.build_type }}/Task1-ut
+          ./Task1/build/${{ matrix.build_type }}/Task1-ut
         shell: bash
