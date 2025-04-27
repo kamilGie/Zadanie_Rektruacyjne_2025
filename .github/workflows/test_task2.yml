@@ -34,7 +34,7 @@ jobs:
       - name: Install build tools
         run: |
           if [[ "$RUNNER_OS" == "Linux" ]]; then
-            sudo apt-get update && sudo apt-get install -y build-essential cmake
+            sudo apt-get update && sudo apt-get install -y cmake g++ libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
           elif [[ "$RUNNER_OS" == "Windows" ]]; then
             choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
           elif [[ "$RUNNER_OS" == "macOS" ]]; then

@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 TEST(ApplicationEmptyTest, ReturnsEmptyWhenNoAsksAdded) {
-  intType (*f)(intType, intType);
+  intType (*f)(intType, intType) = intType::f;
   intType x{7};
   auto result1 = calculate(3, x, f);
   auto result2 = f(f(x, x), x);

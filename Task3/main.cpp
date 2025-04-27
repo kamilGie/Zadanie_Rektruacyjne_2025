@@ -4,7 +4,7 @@
 
 int main() {
 
-  intType (*f)(intType, intType);
+  intType (*f)(intType, intType) = intType::f;
   intType x{7};
 
   auto result1 = calculate(3, x, f);
