@@ -13,7 +13,7 @@ class Task1Recipe(ConanFile):
             self.settings.build_type = "Release"
 
     def requirements(self):
-        self.requires("gtest/1.16.0")
+        self.requires("gtest/1.14.0")
 
     def layout(self):
         cmake_layout(self)
