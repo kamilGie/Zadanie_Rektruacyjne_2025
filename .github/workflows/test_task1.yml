@@ -40,6 +40,7 @@ jobs:
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             brew install cmake
           fi
+        shell: bash
 
       - name: Configure Conan
         run: |
