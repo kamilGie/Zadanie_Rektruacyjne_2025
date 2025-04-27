@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 project(Task2)
 
@@ -27,19 +27,19 @@ include(FetchContent)
 FetchContent_Declare(
 		googletest
 		URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
+						DOWNLOAD_EXTRACT_TIMESTAMP
+						TRUE)
 set(gtest_force_shared_crt
 				ON
 				CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # raylib
-set(RAYLIB_VERSION 5.0)
 FetchContent_Declare(
 		raylib
 		URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
-)
-
+						DOWNLOAD_EXTRACT_TIMESTAMP
+						TRUE)
 set(BUILD_EXAMPLES
 				OFF
 				CACHE INTERNAL "")
