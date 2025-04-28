@@ -14,6 +14,7 @@ class Task1Recipe(ConanFile):
 
     def requirements(self):
         self.requires("gtest/1.16.0")
+        self.requires("boost/1.87.0")
 
     def layout(self):
         cmake_layout(self)

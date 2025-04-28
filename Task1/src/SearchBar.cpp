@@ -57,8 +57,8 @@ std::span<const std::string> SearchBar::ask(const std::string &question) const {
 
     // Searching for the upper and lower bound in a sorted vector by prefix
     auto prefix_view = [&](const std::string &s) { return std::string_view(s).substr(0, question.size()); };
-    auto [uppe, lower] = std::ranges::equal_range(asks, question, std::ranges::less{}, prefix_view);
-    return {uppe, lower};
+    auto [upper, lower] = std::ranges::equal_range(asks, question, std::ranges::less{}, prefix_view);
+    return std::span{upper, lower};
 }
 
 void SearchBar::add(std::string question) {

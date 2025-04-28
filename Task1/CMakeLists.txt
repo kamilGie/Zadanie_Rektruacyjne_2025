@@ -11,14 +11,16 @@ set(SOURCES src/Application.cpp src/SearchBar.cpp)
 
 # Wyszukiwanie zależności
 find_package(GTest REQUIRED)
+find_package(Boost REQUIRED)
 
 # Główny plik wykonywalny
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
+target_link_libraries(${PROJECT_NAME} boost::boost)
 
 # Testy
 enable_testing()
 add_executable(${PROJECT_NAME}-ut testy.cpp ${SOURCES})
-target_link_libraries(${PROJECT_NAME}-ut PRIVATE GTest::GTest GTest::gtest_main)
+target_link_libraries(${PROJECT_NAME}-ut PRIVATE GTest::GTest GTest::gtest_main boost::boost)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}-ut)
