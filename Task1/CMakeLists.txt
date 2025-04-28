@@ -7,11 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-
 # Wymuszam użycie nowszego GCC na Ubuntu
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12.0)
-		message(FATAL_ERROR "Wymagany GCC >= 12. Zainstaluj: sudo apt install gcc-12 g++-12")
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
+		message(FATAL_ERROR "Wymagany GCC >= 13. Zainstaluj: sudo apt install gcc-13 g++-13")
 	endif()
 	add_compile_options(-fconcepts)
 endif()
