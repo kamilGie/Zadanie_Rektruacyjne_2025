@@ -1,6 +1,7 @@
 #include "./SearchBar.h"
 
-#include <cctype>
+#include <boost/algorithm/string.hpp>
+#include <boost/locale.hpp>
 #include <fstream>
 #include <iostream>
 #include <span>
@@ -52,18 +53,39 @@ void SearchBar::save_questions_to_file() {
     }
 };
 
-std::span<const std::string> SearchBar::ask(const std::string &question) const {
-    if (question.empty() || empty(asks)) return {};
+std::string SearchBar::normalize_string(const std::string &str) {
+    if (str.empty()) return str;
+
+    static boost::locale::generator gen;
+    static std::locale loc = gen("pl_PL.UTF-8");
+
+    std::string s = str;
+
+    s = boost::locale::to_lower(s, loc);
+    boost::algorithm::trim(s);
+
+    std::vector<std::string> tokens;
+    boost::algorithm::split(tokens, s, boost::is_any_of(" "), boost::token_compress_on);
+
+    s = boost::algorithm::join(tokens, " ");
+    return s;
+}
+
+std::span<const std::string> SearchBar::ask(const std::string &question) {
+    std::string normalizeQuestion = normalize_string(question);
+
+    if (normalizeQuestion.empty() || empty(asks)) return {};
 
     // Searching for the upper and lower bound in a sorted vector by prefix
-    auto prefix_view = [&](const std::string &s) { return std::string_view(s).substr(0, question.size()); };
-    auto [upper, lower] = std::ranges::equal_range(asks, question, std::ranges::less{}, prefix_view);
+    auto prefix_view = [&](const std::string &s) { return std::string_view(s).substr(0, normalizeQuestion.size()); };
+    auto [upper, lower] = std::ranges::equal_range(asks, normalizeQuestion, std::ranges::less{}, prefix_view);
     return std::span{upper, lower};
 }
 
 void SearchBar::add(std::string question) {
-    auto it = std::lower_bound(asks.begin(), asks.end(), question);
-    asks.insert(it, std::move(question));
+    std::string normalizeQuestion = normalize_string(question);
+    auto it = std::lower_bound(asks.begin(), asks.end(), normalizeQuestion);
+    asks.insert(it, std::move(normalizeQuestion));
 }
 
 const std::filesystem::path &SearchBar::getFile() const { return dataFile; }

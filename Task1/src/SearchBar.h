@@ -10,7 +10,7 @@ class SearchBar {
     explicit SearchBar(std::filesystem::path file = "date.txt");
     ~SearchBar();
 
-    std::span<const std::string> ask(const std::string &ask) const;
+    std::span<const std::string> ask(const std::string &ask);
     void add(std::string entry);
 
     const std::filesystem::path &getFile() const;
@@ -18,6 +18,7 @@ class SearchBar {
 
    private:
     void save_questions_to_file();
+    std::string normalize_string(const std::string &str);
 
     std::filesystem::path dataFile;
     std::vector<std::string> asks;
