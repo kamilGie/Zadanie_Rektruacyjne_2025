@@ -1,4 +1,5 @@
 ---
+Language: Cpp
 BasedOnStyle: Google
-Language: cpp
-ColumnLimit: 80
+IndentWidth: 4
+ColumnLimit: 120
