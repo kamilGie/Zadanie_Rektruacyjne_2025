@@ -2,91 +2,91 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <span>
 #include <string>
+#include <string_view>
 #include <vector>
 
-SearchBar::~SearchBar() { save_questions_to_file(); }
+SearchBar::~SearchBar() { saveQueriesToFile(); }
 
-SearchBar::SearchBar(std::filesystem::path f) : dataFile(std::move(f)) {
-    if (dataFile == "") {
-        return;
-    }
+SearchBar::SearchBar(std::filesystem::path filePath) : dataFile(std::move(filePath)) {
+    if (dataFile.empty()) return;
 
-    std::ifstream data(dataFile);
-
-    if (data.is_open()) {
-        std::string line;
-        while (std::getline(data, line)) {
-            asks.push_back(line);
+    if (std::ifstream inputFile{dataFile}; inputFile.is_open()) [[likely]] {
+        for (std::string line; std::getline(inputFile, line);) {
+            queries.push_back(std::move(line));
         }
-    } else {
-        std::cerr << "Nie można otworzyć pliku: " << dataFile << std::endl;
-    }
-}
-
-void SearchBar::save_questions_to_file() {
-    if (dataFile == "") {
-        return;
-    }
-
-    std::filesystem::path tmpFile = "tmp.txt";
-    {
-        std::ofstream tmp(tmpFile);
-        if (tmp.is_open()) {
-            for (const auto &ask : asks) {
-                tmp << ask << std::endl;
-            }
-        } else {
-            std::cerr << "Nie można otworzyć pliku " << tmpFile << " do zapisu!" << std::endl;
+    } else [[unlikely]] {
+        std::ofstream newFile{dataFile};
+        if (!newFile) {
+            std::cerr << std::format("Cannot create file: {}\n", dataFile.string());
             return;
         }
     }
+}
 
-    try {
-        std::filesystem::rename(tmpFile, dataFile);
-        std::cout << "zapytania zapisane jako: " << dataFile << std::endl;
-    } catch (const std::filesystem::filesystem_error &e) {
-        std::cerr << "Błąd przy zmianie nazwy pliku: " << e.what() << std::endl;
+void SearchBar::saveQueriesToFile() {
+    if (dataFile.empty()) return;
+
+    // Create a temporary file to prevent data loss in case of a failure during save
+    const auto tempFile = std::filesystem::temp_directory_path() / (dataFile.filename().string() + ".tmp");
+    std::ofstream tmpOutput(tempFile);
+    if (tmpOutput.is_open()) {
+        for (const auto &query : queries) {
+            tmpOutput << query << std::endl;
+        }
+    } else {
+        std::cerr << "Cannot open temporary file " << tempFile << " for writing!" << std::endl;
+        return;
     }
-};
 
-std::string SearchBar::normalize_string(const std::string &str) {
-    if (str.empty()) return str;
+    // Replace the original file with the new temporary file
+    try {
+        std::filesystem::rename(tempFile, dataFile);
+        std::cout << "Queries saved as: " << dataFile << std::endl;
+    } catch (const std::filesystem::filesystem_error &e) {
+        std::cerr << "Error while renaming file: " << e.what() << std::endl;
+    }
+}
 
-    static boost::locale::generator gen;
-    static std::locale loc = gen("pl_PL.UTF-8");
+std::string SearchBar::normalizeString(std::string_view text) {
+    if (text.empty()) return {};
 
-    std::string s = str;
+    std::string result(text);
 
-    s = boost::locale::to_lower(s, loc);
-    boost::algorithm::trim(s);
+    static boost::locale::generator generator;
+    static std::locale polishLocale = generator("pl_PL.UTF-8");
+    result = boost::locale::to_lower(result, polishLocale);
+    boost::algorithm::trim(result);
 
+    // Remove redundant spaces
     std::vector<std::string> tokens;
-    boost::algorithm::split(tokens, s, boost::is_any_of(" "), boost::token_compress_on);
+    boost::algorithm::split(tokens, result, boost::is_any_of(" "), boost::token_compress_on);
+    result = boost::algorithm::join(tokens, " ");
 
-    s = boost::algorithm::join(tokens, " ");
-    return s;
+    return result;
 }
 
-std::span<const std::string> SearchBar::ask(const std::string &question) {
-    std::string normalizeQuestion = normalize_string(question);
+std::span<const std::string> SearchBar::search(std::string_view inputQuery) {
+    std::string normalizedQuery = normalizeString(inputQuery);
 
-    if (normalizeQuestion.empty() || empty(asks)) return {};
+    if (normalizedQuery.empty() || queries.empty()) return {};
 
-    // Searching for the upper and lower bound in a sorted vector by prefix
-    auto prefix_view = [&](const std::string &s) { return std::string_view(s).substr(0, normalizeQuestion.size()); };
-    auto [upper, lower] = std::ranges::equal_range(asks, normalizeQuestion, std::ranges::less{}, prefix_view);
-    return std::span{upper, lower};
+    // Find the range (from the first to the last matching element) in the sorted list based on the query prefix
+    auto prefixView = [&](const std::string &str) { return std::string_view(str).substr(0, normalizedQuery.size()); };
+    auto [lowerBound, upperBound] = std::ranges::equal_range(queries, normalizedQuery, std::ranges::less{}, prefixView);
+    return std::span{lowerBound, upperBound};
 }
 
-void SearchBar::add(std::string question) {
-    std::string normalizeQuestion = normalize_string(question);
-    auto it = std::lower_bound(asks.begin(), asks.end(), normalizeQuestion);
-    asks.insert(it, std::move(normalizeQuestion));
+void SearchBar::addQuery(std::string newQuery) {
+    newQuery = normalizeString(newQuery);
+    auto insertPos = std::lower_bound(queries.begin(), queries.end(), newQuery);
+    bool unique = insertPos == queries.end() || *insertPos != newQuery;
+    if (unique) queries.insert(insertPos, std::move(newQuery));
 }
 
-const std::filesystem::path &SearchBar::getFile() const { return dataFile; }
-const std::vector<std::string> &SearchBar::getAsks() const { return asks; }
+const std::filesystem::path &SearchBar::getFilePath() const { return dataFile; }
+const std::vector<std::string> &SearchBar::getQueries() const { return queries; }

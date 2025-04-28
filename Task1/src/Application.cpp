@@ -5,9 +5,9 @@
 
 void Application::processCommand(const std::string &line) {
     if (line.starts_with("add: ")) {
-        searchBar.add(line.substr(5));
+        searchBar.addQuery(line.substr(5));
     } else if (line.starts_with("ask: ")) {
-        for (const auto &res : searchBar.ask(line.substr(5))) {
+        for (const auto &res : searchBar.search(line.substr(5))) {
             std::cout << std::format("result: {}", res) << std::endl;
         }
     } else {
@@ -20,4 +20,7 @@ void Application::processCommand(const std::string &line) {
 
 const SearchBar &Application::getSearchBar() const { return searchBar; }
 
-void Application::setSearchBar(const SearchBar &newSearchBar) { searchBar = newSearchBar; }
+bool Application::setSearchBar(const SearchBar &newSearchBar) {
+    searchBar = newSearchBar;
+    return true;
+}

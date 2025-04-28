@@ -1,72 +1,156 @@
-/*#include <gtest/gtest.h>*/
-/**/
-/*#include <vector>*/
-/**/
-/*#include "src/Application.h"*/
-/*#include "src/SearchBar.h"*/
-/**/
-/*// APPLICATION TESTS*/
-/**/
-/*class ApplicationTest : public ::testing::Test {*/
-/*   protected:*/
-/*    Application apk;*/
-/**/
-/*    explicit ApplicationTest(const std::string& initialValue = "") : apk(initialValue) {}*/
-/**/
-/*    void SetUp() override {*/
-/*        apk.processCommand("add: Kiedy jest nowy rok w Chinach?");*/
-/*        apk.processCommand("add: Kiedy jest nowy rok w Tajlandii?");*/
-/*    }*/
-/*};*/
-/**/
-/*TEST_F(ApplicationTest, FindsMatchingAsksByCommand) {*/
-/*    std::stringstream buffer;*/
-/*    std::streambuf* oldCout = std::cout.rdbuf(buffer.rdbuf());*/
-/*    apk.processCommand("ask: Kiedy jest nowy rok");*/
-/**/
-/*    std::cout.rdbuf(oldCout);*/
-/**/
-/*    ASSERT_EQ(buffer.str(),*/
-/*              "result: Kiedy jest nowy rok w Chinach?\n"*/
-/*              "result: Kiedy jest nowy rok w Tajlandii?\n");*/
-/*}*/
-/**/
-/*// SEARCH BAR TESTS*/
-/**/
-/*class SearchBarTest : public ::testing::Test {*/
-/*   protected:*/
-/*    SearchBar searchBar;*/
-/**/
-/*    explicit SearchBarTest(const std::string& initialValue = "") : searchBar(initialValue) {}*/
-/**/
-/*    void SetUp() override {*/
-/*        searchBar.add("Kiedy jest nowy rok w Chinach?");*/
-/*        searchBar.add("Kiedy jest nowy rok w Tajlandii?");*/
-/*    }*/
-/*};*/
-/**/
-/*TEST_F(SearchBarTest, FindsMatchingAsks) {*/
-/*    auto result = searchBar.ask("Kiedy jest nowy rok");*/
-/*    std::vector<std::string> resultVector(result.begin(), result.end());*/
-/*    std::vector<std::string> goalVector(*/
-/*        std::vector<std::string>{"Kiedy jest nowy rok w Chinach?", "Kiedy jest nowy rok w Tajlandii?"});*/
-/**/
-/*    ASSERT_EQ(resultVector, goalVector);*/
-/*}*/
-/**/
-/*TEST_F(SearchBarTest, ReturnsEmptyWhenNoMatchFound) {*/
-/*    auto result = searchBar.ask("Ile ma lat");*/
-/*    std::vector<std::string> resultVector(result.begin(), result.end());*/
-/*    std::vector<std::string> goalVector(std::vector<std::string>{});*/
-/**/
-/*    ASSERT_EQ(resultVector, goalVector);*/
-/*}*/
-/**/
-/*TEST(ApplicationEmptyTest, ReturnsEmptyWhenNoAsksAdded) {*/
-/*    SearchBar emptySearchBar("");*/
-/*    auto result = emptySearchBar.ask("Ile ma lat");*/
-/*    std::vector<std::string> resultVector(result.begin(), result.end());*/
-/*    std::vector<std::string> goalVector(std::vector<std::string>{});*/
-/**/
-/*    ASSERT_EQ(resultVector, goalVector);*/
-/*}*/
+#include <gtest/gtest.h>
+
+#include <vector>
+
+#include "src/Application.h"
+#include "src/SearchBar.h"
+
+// APPLICATION TESTS
+
+class ApplicationEdgeCaseTest : public ::testing::Test {
+   protected:
+    Application app{""};
+
+    void SetUp() override {
+        app.processCommand("add: Kiedy jest nowy rok w Chinach?");
+        app.processCommand("add: Kiedy jest nowy rok w Tajlandii?");
+    }
+};
+
+TEST_F(ApplicationEdgeCaseTest, FindsMatchingAsksByCommand) {
+    std::stringstream buffer;
+    std::streambuf* oldCout = std::cout.rdbuf(buffer.rdbuf());
+    app.processCommand("ask: Kiedy jest nowy rok");
+
+    std::cout.rdbuf(oldCout);
+
+    ASSERT_EQ(buffer.str(),
+              "result: kiedy jest nowy rok w chinach?\n"
+              "result: kiedy jest nowy rok w tajlandii?\n");
+}
+
+TEST_F(ApplicationEdgeCaseTest, SearchWithoutAdds) {
+    std::stringstream out;
+    auto oldCout = std::cout.rdbuf(out.rdbuf());
+    app.processCommand("ask: xyz");
+    std::cout.rdbuf(oldCout);
+
+    ASSERT_TRUE(out.str().empty());
+}
+
+TEST_F(ApplicationEdgeCaseTest, MixedCaseAndSpacesNormalization) {
+    app.processCommand("add:   HeLLo   WoRLd  ");
+    std::stringstream out;
+    auto oldCout = std::cout.rdbuf(out.rdbuf());
+    app.processCommand("ask: hello");
+    std::cout.rdbuf(oldCout);
+
+    ASSERT_EQ(out.str(), "result: hello world\n");
+}
+
+TEST_F(ApplicationEdgeCaseTest, PolishLetters) {
+    app.processCommand("add: ŻĄĘŁĘŃĆ");
+    std::stringstream out;
+    auto oldCout = std::cout.rdbuf(out.rdbuf());
+    app.processCommand("ask: Ż");
+    std::cout.rdbuf(oldCout);
+
+    ASSERT_EQ(out.str(), "result: żąęłęńć\n");
+}
+
+// SEARCH BAR TESTS
+
+class SearchBarTest : public ::testing::Test {
+   protected:
+    SearchBar searchBar{""};
+
+    void SetUp() override {
+        searchBar.addQuery("Kiedy jest nowy rok w Chinach?");
+        searchBar.addQuery("Kiedy jest nowy rok w Tajlandii?");
+    }
+};
+
+TEST_F(SearchBarTest, FindsMatchingAsksTwo) {
+    auto result = searchBar.search("Kiedy jest nowy rok");
+    std::vector<std::string> resultVector(result.begin(), result.end());
+    std::vector<std::string> goalVector(
+        std::vector<std::string>{"kiedy jest nowy rok w chinach?", "kiedy jest nowy rok w tajlandii?"});
+
+    ASSERT_EQ(resultVector, goalVector);
+}
+
+TEST_F(SearchBarTest, FindsMatchingAsksOne) {
+    auto result = searchBar.search("Kiedy jest nowy rok w t");
+    std::vector<std::string> resultVector(result.begin(), result.end());
+    std::vector<std::string> goalVector(std::vector<std::string>{"kiedy jest nowy rok w tajlandii?"});
+
+    ASSERT_EQ(resultVector, goalVector);
+}
+
+TEST_F(SearchBarTest, FindsMatchingAsksZero) {
+    auto result = searchBar.search("Kiedy jest nowy rok w tajlandiii");
+    std::vector<std::string> resultVector(result.begin(), result.end());
+    std::vector<std::string> goalVector(std::vector<std::string>{});
+
+    ASSERT_EQ(resultVector, goalVector);
+}
+
+class SearchBarNormalizationTest : public ::testing::Test {
+   protected:
+    SearchBar sb{""};
+};
+
+TEST_F(SearchBarNormalizationTest, TrimsAndLowercases) {
+    sb.addQuery("   TeST   CaSe  ");
+    auto res = sb.search("test");
+    std::vector<std::string> vec(res.begin(), res.end());
+    ASSERT_EQ(vec.size(), 1);
+    EXPECT_EQ(vec[0], "test case");
+}
+
+TEST_F(SearchBarNormalizationTest, InsertsInOrder) {
+    sb.addQuery("banana");
+    sb.addQuery("apple");
+    sb.addQuery("cherry");
+
+    auto all = sb.getQueries();
+    EXPECT_EQ(all[0], "apple");
+    EXPECT_EQ(all[1], "banana");
+    EXPECT_EQ(all[2], "cherry");
+}
+
+TEST_F(SearchBarNormalizationTest, DuplicateEntriesKept) {
+    sb.addQuery("pow");
+    sb.addQuery("pow");
+    sb.addQuery("pow");
+
+    auto res = sb.search("p");
+    std::vector<std::string> vec(res.begin(), res.end());
+
+    ASSERT_EQ(vec.size(), 1);
+    EXPECT_EQ(vec[0], "pow");
+}
+
+TEST_F(SearchBarNormalizationTest, PartialPrefixSearch) {
+    sb.addQuery("prefixTest");
+    sb.addQuery("prelude");
+    sb.addQuery("other");
+    auto res = sb.search("pre");
+    std::vector<std::string> vec(res.begin(), res.end());
+    ASSERT_EQ(vec.size(), 2);
+    EXPECT_EQ(vec[0], "prefixtest");
+    EXPECT_EQ(vec[1], "prelude");
+}
+
+TEST_F(SearchBarNormalizationTest, EmptyQueryReturnsEmpty) {
+    sb.addQuery("something");
+    auto res = sb.search("");
+    ASSERT_TRUE(res.empty());
+}
+
+TEST_F(SearchBarNormalizationTest, NoMatchReturnsEmpty) {
+    sb.addQuery("one");
+    sb.addQuery("two");
+    auto res = sb.search("three");
+    ASSERT_TRUE(res.empty());
+}
