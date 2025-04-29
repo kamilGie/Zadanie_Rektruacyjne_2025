@@ -1,14 +1,15 @@
-#include <cassert>
+#include <format>
+#include <iostream>
+
 #include "src/Templates.hpp"
-#include "src/Types.h"
+#include "src/Types.hpp"
 
 int main() {
+    auto f = stringType::Add;
+    stringType x{"Hello World "};
 
-    intType (*f)(intType, intType) = intType::f;
-    intType x{7};
+    stringType result1 = calculate(3, x, f);
+    stringType result2 = f(f(x, x), x);
 
-
-    auto result1 = calculate(3, x, f);
-    auto result2 = f(f(x, x), x);
-    assert(result1.value == result2.value);
+    std::cout << std::format("result 1: {}\nresult 2: {}\n", result1.value, result2.value);
 }

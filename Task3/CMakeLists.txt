@@ -7,17 +7,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(SOURCES src/Types.cpp)
-
 # Wyszukiwanie zależności
 find_package(GTest REQUIRED)
 
 # Główny plik wykonywalny
-add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
+add_executable(${PROJECT_NAME} main.cpp)
 
 # Testy
 enable_testing()
-add_executable(${PROJECT_NAME}-ut testy.cpp ${SOURCES})
+add_executable(${PROJECT_NAME}-ut testy.cpp)
 target_link_libraries(${PROJECT_NAME}-ut PRIVATE GTest::GTest GTest::gtest_main)
 
 include(GoogleTest)
