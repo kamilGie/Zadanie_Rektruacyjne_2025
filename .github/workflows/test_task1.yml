@@ -38,6 +38,9 @@ jobs:
             sudo apt install gcc-12 g++-12
             sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
             sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+            sudo apt install locales
+            sudo locale-gen pl_PL.UTF-8
+            sudo update-locale
           elif [[ "$RUNNER_OS" == "Windows" ]]; then
             choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
