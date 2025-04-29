@@ -49,7 +49,7 @@ jobs:
       - name: Build with Conan
         run: |
           cd Task2
-          conan build . --build=missing -s build_type=${{ matrix.build_type }}
+          conan build . --build=missing -c tools.system.package_manager:mode=install -s build_type=${{ matrix.build_type }}
 
       - name: Run tests
         run: |
