@@ -20,11 +20,9 @@ constexpr Color SELECTED_TRIANGLE_COLOR = CLITERAL(Color){135, 250, 130, 255};
 constexpr float MIN_ZOOM = 0.1f;
 constexpr float MAX_ZOOM = 5.0f;
 
-constexpr float manhattanDistance(float x1, float y1, float x2, float y2) {
-    return std::abs(x1 - x2) + std::abs(y1 - y2);
-}
+float manhattanDistance(float x1, float y1, float x2, float y2) { return std::abs(x1 - x2) + std::abs(y1 - y2); }
 
-constexpr float calculateSignedArea(vec2 a, vec2 b, vec2 c) {
+float calculateSignedArea(vec2 a, vec2 b, vec2 c) {
     return 0.5f * -((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
 }
 }  // namespace
