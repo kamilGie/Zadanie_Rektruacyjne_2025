@@ -136,6 +136,7 @@ void Visualizer::handleTriangleSelection(Vector2 mousePos) {
 
                 if (distance < (25.0f / camera.zoom) && distance < minDistance) {
                     minDistance = distance;
+                    SetMouseCursor(MOUSE_CURSOR_RESIZE_ALL);
                     selectedVertex = &triangle->points[i];
                     resizedTriangle = triangle;
                     selectedTriangle = triangle;
@@ -145,6 +146,7 @@ void Visualizer::handleTriangleSelection(Vector2 mousePos) {
 
             // if we click inside triangle to grab not to resize
             if (!resizedTriangle && isMouseInsideTriangle(*triangle, mousePos)) {
+                SetMouseCursor(MOUSE_CURSOR_RESIZE_ALL);
                 draggedTriangle = triangle;
                 selectedTriangle = triangle;
                 dragStartPosition = mousePos;
@@ -155,14 +157,19 @@ void Visualizer::handleTriangleSelection(Vector2 mousePos) {
     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
         draggedTriangle = nullptr;
         resizedTriangle = nullptr;
+        SetMouseCursor(MOUSE_CURSOR_DEFAULT);
     }
 }
 
 void Visualizer::handleCameraControl() {
     // Camera moving
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+        SetMouseCursor(MOUSE_CURSOR_RESIZE_ALL);
         const Vector2 delta = Vector2Scale(GetMouseDelta(), -1.0f / camera.zoom);
         camera.target = Vector2Add(camera.target, delta);
+    }
+    if (IsMouseButtonReleased(MOUSE_BUTTON_RIGHT)) {
+        SetMouseCursor(MOUSE_CURSOR_DEFAULT);
     }
 
     // Zoom on scrool
