@@ -14,8 +14,7 @@ TEST(ApplicationCollisionTest, ReturnsTrueWhenTrianglesCollide) {
     ASSERT_TRUE(isColliding(t1, t2));
 }
 
-TEST(ApplicationContainmentTest,
-     ReturnsTrueWhenOneTriangleIsContainedInAnother) {
+TEST(ApplicationContainmentTest, ReturnsTrueWhenOneTriangleIsContainedInAnother) {
     triangle t1{{{{200, 150}, {100, 350}, {300, 350}}}};
     triangle t2{{{{250, 200}, {200, 350}, {300, 350}}}};
     ASSERT_TRUE(isColliding(t1, t2));
@@ -39,8 +38,7 @@ TEST(ApplicationVerticalTest, ReturnsTrueWhenTrianglesAreVerticallyAligned) {
     ASSERT_TRUE(isColliding(t1, t2));
 }
 
-TEST(ApplicationPartialOverlapTest,
-     ReturnsTrueWhenTrianglePartiallyOverlapsAnother) {
+TEST(ApplicationPartialOverlapTest, ReturnsTrueWhenTrianglePartiallyOverlapsAnother) {
     triangle t1{{{{200, 150}, {100, 350}, {300, 350}}}};
     triangle t2{{{{230, 200}, {150, 350}, {250, 350}}}};
     ASSERT_TRUE(isColliding(t1, t2));

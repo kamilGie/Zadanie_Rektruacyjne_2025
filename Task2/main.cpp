@@ -1,23 +1,23 @@
 #include "src/Application.h"
-#include "src/Visualisation.h"
+#include "src/Visualizer.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
 int main() {
-    // tworze 2 trojkaty
-    triangle t1{{{{200, 150}, {100, 350}, {300, 350}}}};
-    triangle t2{{{{400, 150}, {301, 351}, {500, 350}}}};
+    // Create two triangles
+    triangle t1{{{{530, 100}, {300, 450}, {750, 448}}}};
+    triangle t2{{{{450, 100}, {50, 100}, {250, 450}}}};
 
-    Visualisation vis(WINDOW_WIDTH, WINDOW_HEIGHT);
+    Visualizer vis(WINDOW_WIDTH, WINDOW_HEIGHT);
     vis.addTriangle(t1);
     vis.addTriangle(t2);
 
-    while (!vis.shouldExit()) {
+    while (!vis.shouldClose()) {
         vis.handleInput();
 
-        // Jesli trojkaty koliduja informuje
-        vis.redLight = isColliding(t1, t2);
+        // If the triangles collide, indicate it
+        vis.isColliding = isColliding(t1, t2);
 
         vis.draw();
     }
