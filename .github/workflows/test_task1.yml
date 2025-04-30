@@ -1,4 +1,4 @@
-name: Build and Test Task1 with Conan
+name: Build and Test Task1
 
 on:
   push:

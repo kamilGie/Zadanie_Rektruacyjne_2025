@@ -32,4 +32,3 @@ target_link_libraries(${PROJECT_NAME}-ut PRIVATE GTest::GTest GTest::gtest_main 
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}-ut)
-
