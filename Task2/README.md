@@ -60,7 +60,7 @@ conan build . --build=missing
 na linuxie w przypadku problemu z pakietami systemowymi podczas budowania projektu, nalezy odpalic 
 
 ```perl
-conan build . --build=missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True -s
+conan build . --build=missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 ```
 
 ## Uruchamianie
