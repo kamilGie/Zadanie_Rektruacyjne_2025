@@ -1,9 +1,10 @@
 #pragma once
 
 #include <filesystem>
-#include <span>
 #include <string_view>
 #include <vector>
+
+#include "Components/trieNode.h"
 
 // SearchBar class - handles saving and searching user queries
 class SearchBar {
@@ -16,13 +17,13 @@ class SearchBar {
     ~SearchBar();
 
     // Searches for queries matching the given `query` prefix
-    std::span<const std::string> search(std::string_view query);
+    std::vector<std::string> search(std::string_view query);
 
-    // Adds a `newQuery` to the list
+    // Adds a `newQuery` to the trie
     void addQuery(std::string newQuery);
 
     const std::filesystem::path& getFilePath() const;
-    const std::vector<std::string>& getQueries() const;
+    const trieNode& getQueriesRoot() const;
 
    private:
     // Saves all queries to the file
@@ -31,6 +32,9 @@ class SearchBar {
     // Normalizes the text (converts to lowercase, removes redundant spaces)
     std::string normalizeString(std::string_view text);
 
+    // Collect all words that follow the given prefix from this node
+    void collectWords(trieNode* node, std::string currentPrefix, std::vector<std::string>& result);
+
     std::filesystem::path dataFile;
-    std::vector<std::string> queries;
+    trieNode queriesRoot;
 };

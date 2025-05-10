@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 project(Task1 LANGUAGES CXX)
 
 # Globalne ustawienia
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -28,7 +28,7 @@ target_link_libraries(${PROJECT_NAME} boost::boost)
 # Testy
 enable_testing()
 add_executable(${PROJECT_NAME}-ut testy.cpp ${SOURCES})
-target_link_libraries(${PROJECT_NAME}-ut PRIVATE GTest::GTest GTest::gtest_main boost::boost)
+target_link_libraries(${PROJECT_NAME}-ut PRIVATE GTest::GTest GTest::gtest_main GTest::gmock_main boost::boost)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}-ut)
