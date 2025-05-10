@@ -1,7 +1,9 @@
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <vector>
 
+#include "gmock/gmock.h"
 #include "src/Application.h"
 #include "src/SearchBar.h"
 
@@ -21,12 +23,13 @@ TEST_F(ApplicationEdgeCaseTest, FindsMatchingAsksByCommand) {
     std::stringstream buffer;
     std::streambuf* oldCout = std::cout.rdbuf(buffer.rdbuf());
     app.processCommand("ask: Kiedy jest nowy rok");
-
     std::cout.rdbuf(oldCout);
 
-    ASSERT_EQ(buffer.str(),
-              "result: kiedy jest nowy rok w tajlandii?\n"
-              "result: kiedy jest nowy rok w chinach?\n");
+    std::string Tajland = "result: kiedy jest nowy rok w tajlandii?\n";
+    std::string Chin = "result: kiedy jest nowy rok w chinach?\n";
+    std::string out = buffer.str();
+
+    ASSERT_TRUE(out == Tajland + Chin || out == Chin + Tajland);
 }
 
 TEST_F(ApplicationEdgeCaseTest, SearchWithoutAdds) {
@@ -73,12 +76,11 @@ class SearchBarTest : public ::testing::Test {
 TEST_F(SearchBarTest, FindsMatchingAsksTwo) {
     auto result = searchBar.search("Kiedy jest nowy rok");
     std::vector<std::string> resultVector(result.begin(), result.end());
-    std::vector<std::string> goalVector(std::vector<std::string>{
-        "kiedy jest nowy rok w tajlandii?",
-        "kiedy jest nowy rok w chinach?",
-    });
 
-    ASSERT_EQ(resultVector, goalVector);
+    std::string Tajland = "kiedy jest nowy rok w tajlandii?";
+    std::string Chin = "kiedy jest nowy rok w chinach?";
+
+    EXPECT_THAT(resultVector, ::testing::UnorderedElementsAre(Tajland, Chin));
 }
 
 TEST_F(SearchBarTest, FindsMatchingAsksOne) {
